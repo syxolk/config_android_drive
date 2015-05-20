@@ -157,8 +157,8 @@ void Senseboard2015::prepareDown() {
         }
         break;
     }
-    logger.error()<<m_control_data->steering_front;
-    logger.error()<<m_control_data->steering_rear;
+    logger.debug()<<m_control_data->steering_front;
+    logger.debug()<<m_control_data->steering_rear;
     down.servo_f = convert_servo_front.convert<float, int16_t>(-m_control_data->steering_front); // minus wegen neuen servos
     down.servo_r = convert_servo_rear.convert<float, int16_t>(m_control_data->steering_rear);   // minus wegen neuen servos
     down.v_mode = DOWN_MODE_VELOCITY_CONTROL;
