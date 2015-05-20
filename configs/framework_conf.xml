@@ -1,0 +1,40 @@
+<framework>
+	<execution>
+		<maxThreadCount> 1 </maxThreadCount>
+		<clock enabled="true" unit="hz">100</clock>
+	</execution>
+
+	<modulesToEnable>
+		<module>udp_receiver</module>
+		<module>importer_senseboard2015</module>
+	</modulesToEnable>
+
+	<module>
+		<name>udp_receiver</name>
+		<writePriority>10</writePriority>
+		<config>
+			<port>9876</port>
+		</config>
+	</module>
+
+	<module>
+		<name>importer_senseboard2015</name>
+	    <config>
+		    <usbDevice>/dev/ttyACM0</usbDevice>
+	    </config>
+	    <config name="ir_front" src="sensor/ir_front.lconf" />
+	    <config name="ir_rear" src="sensor/ir_rear.lconf" />
+	    <config name="ir_r_front" src="sensor/ir_r_front.lconf" />
+	    <config name="ir_r_rear" src="sensor/ir_r_rear.lconf" />
+	    <config name="ultrasonic" src="sensor/ultrasonic.lconf" />
+	    <config name="gyro" src="sensor/gyro.lconf" />
+	    <config name="acc" src="sensor/acc.lconf" />
+	    <config name="encoder" src="sensor/encoder.lconf" />
+	    <config name="mode" src="sensor/mode.lconf" />
+	    <config name="rc_poti" src="sensor/rc_poti.lconf" />
+	    <config name="servo_front" src="sensor/servo_front.lconf" />
+	    <config name="servo_rear" src="sensor/servo_rear.lconf" />
+	    <config name="velocity" src="sensor/velocity.lconf" />
+	</module>
+</framework>
+

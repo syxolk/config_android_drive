@@ -1,0 +1,5 @@
+_conversion_mode = dual_linear
+positive_factor = 1277 # der positive faktor errechnet sich wie folgt: positive_factor = delta_PWM_max/steering_angle_max
+positive_offset = 3075
+negative_offset = 3075
+negative_factor = -1055 # der negative faktor errechnet sich wie folgt: positive_factor = delta_PWM_min/steering_angle_min
