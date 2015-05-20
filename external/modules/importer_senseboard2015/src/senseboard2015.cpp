@@ -62,7 +62,7 @@ bool Senseboard2015::deinitialize() {
 
 int i = 0;
 bool Senseboard2015::cycle () {
-    m_control_data->control.velocity.velocity = 0.5;
+    //m_control_data->control.velocity.velocity = 0.5;
     //get senseboard-data
     ///Prepare Down
     prepareDown();

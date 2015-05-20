@@ -38,45 +38,49 @@ bool UdpReceiver::deinitialize() {
 }
 
 bool UdpReceiver::cycle() {
-    fd_set rfds;
-    FD_ZERO(&rfds);
-    FD_SET(sockfd, &rfds);
+    while(true) {
+        fd_set rfds;
+        FD_ZERO(&rfds);
+        FD_SET(sockfd, &rfds);
 
-    timeval tv;
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
+        timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 0;
 
-    int retval = select(sockfd + 1, &rfds, NULL, NULL, &tv);
+        int retval = select(sockfd + 1, &rfds, NULL, NULL, &tv);
 
-    if(retval > 0 && FD_ISSET(sockfd, &rfds)) {
-        logger.info("cycle") << "received";
-        struct sockaddr_in clientAddr;
+        if(retval > 0 && FD_ISSET(sockfd, &rfds)) {
+            logger.info("cycle") << "received";
+            struct sockaddr_in clientAddr;
 
-        unsigned int clientAddrLen = sizeof (clientAddr);
-        memset(buffer, 0, BUF_SIZE);
-        size_t received = recvfrom(sockfd, buffer, BUF_SIZE, 0,
-                                   (struct sockaddr *) &clientAddr, &clientAddrLen);
+            unsigned int clientAddrLen = sizeof (clientAddr);
+            memset(buffer, 0, BUF_SIZE);
+            size_t received = recvfrom(sockfd, buffer, BUF_SIZE, 0,
+                                       (struct sockaddr *) &clientAddr, &clientAddrLen);
 
-        logger.info("cycle") << received << " bytes";
+            logger.info("cycle") << received << " bytes";
 
-        Message *msg;
+            Message *msg;
 
-        if(received == 12) {
-            msg = reinterpret_cast<Message*>(buffer);
-            decodeMessage(*msg);
+            if(received == 12) {
+                msg = reinterpret_cast<Message*>(buffer);
+                decodeMessage(*msg);
 
-            logger.debug() << msg->steeringFront << " "
-                           << msg->steeringRear << " " << msg->velocity;
+                logger.debug() << msg->steeringFront << " "
+                               << msg->steeringRear << " " << msg->velocity;
 
-            controlData->vel_mode = Comm::SensorBoard::ControlData::MODE_VELOCITY;
-            controlData->steering_front = msg->steeringFront;
-            controlData->steering_rear = - msg->steeringRear;
-            controlData->control.velocity.velocity = msg->velocity;
+                controlData->vel_mode = Comm::SensorBoard::ControlData::MODE_VELOCITY;
+                controlData->steering_front = msg->steeringFront;
+                controlData->steering_rear = - msg->steeringRear;
+                controlData->control.velocity.velocity = -3 * msg->velocity;
 
-//            buffer[0] = 1;
-//            sendto(sockfd, buffer, 1, 0, (struct sockaddr *) &clientAddr, clientAddrLen);
+    //            buffer[0] = 1;
+    //            sendto(sockfd, buffer, 1, 0, (struct sockaddr *) &clientAddr, clientAddrLen);
 
-            lastUpdate = lms::extra::PrecisionTime::now();
+                lastUpdate = lms::extra::PrecisionTime::now();
+            }
+        } else {
+            break;
         }
     }
 
